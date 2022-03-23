@@ -1,0 +1,15 @@
+## YAML Template.
+---
+spring:
+    datasource:
+        url: jdbc:derby:memory:memDB;create=true
+        driver-class-name: org.apache.derby.jdbc.EmbeddedDriver
+    jpa:
+        hibernate:
+            ddl-auto: update
+    security:
+        user: 
+            name: bu
+            password: 123
+            roles: ADMIN
+---
