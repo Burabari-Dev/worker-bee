@@ -34,3 +34,4 @@ build/
 
 ### Apache Derby ###
 derby.log
+/nbproject/
