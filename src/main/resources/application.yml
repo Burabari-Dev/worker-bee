@@ -2,11 +2,18 @@
 ---
 spring:
     datasource:
-        url: jdbc:derby:memory:memDB;create=true
-        driver-class-name: org.apache.derby.jdbc.EmbeddedDriver
+        url: jdbc:mysql://localhost:3306/workerbee
+        username: dev
+        password: groovie
+#    datasource:
+#        url: jdbc:derby:memory:memDB;create=true
+#        driver-class-name: org.apache.derby.jdbc.EmbeddedDriver
     jpa:
         hibernate:
             ddl-auto: update
+    sql:
+        init:
+            mode: always
     security:
         user: 
             name: bu
