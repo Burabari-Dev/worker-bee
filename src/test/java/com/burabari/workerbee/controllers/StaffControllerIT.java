@@ -10,6 +10,8 @@ import com.burabari.workerbee.models.enums.UserType;
 import com.burabari.workerbee.services.StaffService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -93,5 +95,15 @@ public class StaffControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("id", id.toString()))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void get10Staff_Should_Return_Status_200() throws Exception {
+        List<StaffDTO> tenStaff = Arrays.asList(new StaffDTO[10]);
+        Mockito.when(service.getNext10(0)).thenReturn(tenStaff);
+
+        mockMvc.perform(get("/api/staff")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
