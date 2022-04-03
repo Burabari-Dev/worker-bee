@@ -9,6 +9,7 @@ import com.burabari.workerbee.models.dtos.StaffDTO;
 import com.burabari.workerbee.services.StaffService;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,22 +17,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author codebase
  */
-@RequestMapping("/api/staff")
+@RequestMapping(
+        path = {"/api/staff"}, 
+        consumes = {"application/json"},
+        produces = {"application/json"})
 @RestController
 public class StaffController {
     
-    @Autowired
-    private StaffService service;
+    private final StaffService service;
     
-//    public StaffController(StaffService service){
-//        this.service = service;
-//    }
+    @Autowired
+    public StaffController(StaffService service){
+        this.service = service;
+    }
     
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<StaffDTO> createStaff(@RequestBody Staff staff){
@@ -39,6 +44,12 @@ public class StaffController {
         return ResponseEntity.created(
                 URI.create("/api/staff/"+staffDto.getId()))
                 .body(staffDto);
+    }
+    
+    @GetMapping(params = {"id"})
+    public ResponseEntity<StaffDTO> getById(@RequestParam(name = "id") long id){
+        StaffDTO staffDto = service.getById(id);
+        return ResponseEntity.of(Optional.of(staffDto));
     }
     
     @GetMapping
