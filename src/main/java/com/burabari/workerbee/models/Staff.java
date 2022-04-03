@@ -27,7 +27,7 @@ public class Staff extends User {
     @JoinTable(name = "staff_roles", 
             joinColumns = @JoinColumn(name = "staff_id", referencedColumnName = "id"), 
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    protected Set<Role> roles;
+    private Set<Role> roles;
 
     public Staff(String email, UserType type) {
         super(email, type);
