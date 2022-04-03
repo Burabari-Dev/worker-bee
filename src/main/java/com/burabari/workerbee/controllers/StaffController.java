@@ -47,7 +47,7 @@ public class StaffController {
     }
     
     @GetMapping(params = {"id"})
-    public ResponseEntity<StaffDTO> getById(@RequestParam(name = "id") long id) throws Exception{
+    public ResponseEntity<StaffDTO> getById(@RequestParam(name = "id") long id){
         Optional<StaffDTO> staffDto = service.getById(id);
         return ResponseEntity.of(staffDto);
     }
