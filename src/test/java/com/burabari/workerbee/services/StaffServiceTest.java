@@ -9,14 +9,29 @@ import com.burabari.workerbee.models.dtos.StaffDTO;
 import com.burabari.workerbee.models.enums.UserType;
 import com.burabari.workerbee.repos.StaffRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.isA;
+import static org.mockito.Mockito.doReturn;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
@@ -69,6 +84,28 @@ public class StaffServiceTest {
         
         Assertions.assertThat(staffDto).isNotNull();
         Assertions.assertThat(staffDto.get().getId()).isEqualTo(id);
+    }
+    
+    @Test
+    void getNext10(){
+        int pageNo = 0;
+        
+        Staff[] staffArr = new Staff[15];
+        for(int i = 0; i < staffArr.length; i++){
+            staffArr[i] = new Staff("staff"+i+"@email.com", UserType.STAFF);
+            staffArr[i].setId((long)i);
+        }
+        Staff[] first10 = Arrays.copyOfRange(staffArr, 0, 9);
+        List<Staff> first10List = Arrays.asList(first10);
+        
+        
+        Page<Staff> page = new PageImpl<>(first10List, Pageable.ofSize(10), 15);
+        
+        when(repo.findAll(PageRequest.of(pageNo, 10))).thenReturn(page);
+        
+        List<StaffDTO> next10 = service.getNext10(pageNo);
+        
+        Assertions.assertThat(next10.size()).isBetween(0, 10);
     }
     
 }
