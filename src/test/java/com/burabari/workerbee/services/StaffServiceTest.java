@@ -9,6 +9,7 @@ import com.burabari.workerbee.models.dtos.StaffDTO;
 import com.burabari.workerbee.models.enums.UserType;
 import com.burabari.workerbee.repos.StaffRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,4 +53,22 @@ public class StaffServiceTest {
         Assertions.assertThat(created.getId()).isNotNull();
         Assertions.assertThat(created.getEmail()).isEqualTo(staff.getEmail());
     }
+    
+    @Test
+    void getById(){
+        long id = 1L;
+        Staff staff = new Staff("staff@email.com", UserType.STAFF);
+        staff.setId(id);
+        Optional<Staff> opt = Optional.of(staff);
+        StaffDTO dto = new StaffDTO(id, "staff@email.com", UserType.STAFF);
+        
+        when(repo.findById(id)).thenReturn(opt);
+        when(mapper.convertValue(staff, StaffDTO.class)).thenReturn(dto);
+        
+        StaffDTO staffDto = service.getById(id);
+        
+        Assertions.assertThat(staffDto).isNotNull();
+        Assertions.assertThat(staffDto.getId()).isEqualTo(id);
+    }
+    
 }
