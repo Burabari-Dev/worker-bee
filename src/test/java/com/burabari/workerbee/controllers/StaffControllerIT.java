@@ -57,6 +57,17 @@ public class StaffControllerIT {
     }
     
     @Test
+    void createStaff_Without_Data_Should_Return_Status_400_BadRequest() throws Exception {
+        Staff staff = null;
+        Mockito.when(service.create(staff)).thenThrow(IllegalArgumentException.class);
+
+        mockMvc.perform(post("/api/staff")
+                .contentType(MediaType.APPLICATION_JSON))
+//                .content(staffJson))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test
     void getById_Should_Return_Status_200_And_StaffDto_With_ID() throws Exception{
         Long id = 1L;
         StaffDTO staffDto = new StaffDTO(id, "staff@email.com", UserType.STAFF);
