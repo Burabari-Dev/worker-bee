@@ -40,11 +40,12 @@ public class StaffService {
         return dto;
     }
 
-    public StaffDTO getById(long id) {
+    public Optional<StaffDTO> getById(long id) {
         Optional<Staff> opt = repo.findById(id);
         if(opt.isEmpty())
-            return null;
-        return mapper.convertValue(opt.get(), StaffDTO.class);
+            return Optional.empty();
+        StaffDTO dto = mapper.convertValue(opt.get(), StaffDTO.class);
+        return Optional.of(dto);
     }
 
     public List<StaffDTO> getNext10(int pageNo) {
