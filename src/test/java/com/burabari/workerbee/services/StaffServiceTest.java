@@ -65,10 +65,10 @@ public class StaffServiceTest {
         when(repo.findById(id)).thenReturn(opt);
         when(mapper.convertValue(staff, StaffDTO.class)).thenReturn(dto);
         
-        StaffDTO staffDto = service.getById(id);
+        Optional<StaffDTO> staffDto = service.getById(id);
         
         Assertions.assertThat(staffDto).isNotNull();
-        Assertions.assertThat(staffDto.getId()).isEqualTo(id);
+        Assertions.assertThat(staffDto.get().getId()).isEqualTo(id);
     }
     
 }
