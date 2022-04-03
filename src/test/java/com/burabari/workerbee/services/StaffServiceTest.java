@@ -28,13 +28,13 @@ public class StaffServiceTest {
     @Mock
     private ObjectMapper mapper;
     @InjectMocks
-    private StaffServiceImpl service;
+    private StaffService service;
     
 //    @BeforeEach 
 //    void setUp(){
 //        repo = Mockito.mock(StaffRepo.class);
 //        mapper = Mockito.mock(ObjectMapper.class);
-//        service = new StaffServiceImpl(repo, mapper);
+//        service = new StaffService(repo, mapper);
 //    }
     
     @Test

@@ -7,7 +7,6 @@ package com.burabari.workerbee.controllers;
 import com.burabari.workerbee.models.Staff;
 import com.burabari.workerbee.models.dtos.StaffDTO;
 import com.burabari.workerbee.services.StaffService;
-import com.burabari.workerbee.services.StaffServiceImpl;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StaffController {
     
     @Autowired
-    private StaffServiceImpl service;
+    private StaffService service;
     
 //    public StaffController(StaffService service){
 //        this.service = service;
