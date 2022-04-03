@@ -19,8 +19,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 /**
  *
@@ -37,7 +40,7 @@ public class StaffControllerIT {
     private final ObjectMapper mapper = new JsonMapper();
 
     @Test
-    void create_Staff_Should_Return_Status_201_Created_Staff_Dto() throws Exception {
+    void createStaff_Should_Return_Status_201_Created_StaffDto() throws Exception {
         Staff staff = new Staff("staff@email.com", UserType.STAFF);
         staff.setId(1L);
         String staffJson = mapper.writeValueAsString(staff);
@@ -51,5 +54,22 @@ public class StaffControllerIT {
                 .andExpect(status().isCreated())
                 .andExpect(header().string(
                         HttpHeaders.LOCATION, "/api/staff/1"));
+    }
+    
+    @Test
+    void getById_Should_Return_Status_200_And_StaffDto_With_ID() throws Exception{
+        Long id = 1L;
+        StaffDTO staffDto = new StaffDTO(id, "staff@email.com", UserType.STAFF);
+        String staffJson = mapper.writeValueAsString(staffDto);
+        
+        Mockito.when(service.getById(id)).thenReturn(staffDto);
+        
+        mockMvc.perform(get("/api/staff")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("id", id.toString()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(staffJson));
+                
     }
 }
