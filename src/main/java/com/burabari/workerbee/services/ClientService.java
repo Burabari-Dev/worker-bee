@@ -4,6 +4,7 @@
  */
 package com.burabari.workerbee.services;
 
+import com.burabari.workerbee.models.Client;
 import com.burabari.workerbee.repos.ClientsRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,10 @@ public class ClientService {
     public ClientService(ClientsRepo repo, ObjectMapper mapper){
         this.repo = repo;
         this.mapper = mapper;
+    }
+    
+    public Client create(Client client) {
+        Client saved = repo.save(client);
+        return saved;
     }
 }
