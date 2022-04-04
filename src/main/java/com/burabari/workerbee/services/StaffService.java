@@ -54,10 +54,11 @@ public class StaffService {
                 .collect(Collectors.toList());
     }
 
-    public void update(Staff staff) throws EntityNotFoundException{
+    public boolean update(Staff staff) throws EntityNotFoundException{
         if(! repo.existsById(staff.getId()))
             throw new EntityNotFoundException("No Staff record with id: "+staff.getId());
         repo.save(staff);
+        return true;
     }
 
     public void delete(long id) throws Exception{
