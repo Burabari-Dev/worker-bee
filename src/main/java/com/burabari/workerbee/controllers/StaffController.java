@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,5 +57,13 @@ public class StaffController {
     public ResponseEntity<List<StaffDTO>> get10Staff(){
         List<StaffDTO> next10 = service.getNext10(0);
         return ResponseEntity.ok(next10);
+    }
+    
+    @PutMapping
+    public ResponseEntity updateStaff(@RequestBody(required = true) Staff staff){
+        boolean updated = service.update(staff);
+        if(updated)
+            return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 }
