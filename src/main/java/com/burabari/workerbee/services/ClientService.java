@@ -4,6 +4,9 @@
  */
 package com.burabari.workerbee.services;
 
+import com.burabari.workerbee.repos.ClientsRepo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,4 +16,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClientService {
     
+    private ClientsRepo repo;
+    private ObjectMapper mapper;
+    
+    @Autowired
+    public ClientService(ClientsRepo repo, ObjectMapper mapper){
+        this.repo = repo;
+        this.mapper = mapper;
+    }
 }
