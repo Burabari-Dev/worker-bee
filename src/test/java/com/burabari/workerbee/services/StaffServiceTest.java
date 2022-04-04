@@ -40,18 +40,11 @@ import org.springframework.data.domain.Pageable;
 @ExtendWith(MockitoExtension.class)
 public class StaffServiceTest {
     @Mock
-    private StaffRepo repo;
+    private StaffRepo repo;         //-> repo = Mockito.mock(StaffRepo.class);
     @Mock
-    private ObjectMapper mapper;
+    private ObjectMapper mapper;    //-> mapper = Mockito.mock(ObjectMapper.class);
     @InjectMocks
-    private StaffService service;
-    
-//    @BeforeEach 
-//    void setUp(){
-//        repo = Mockito.mock(StaffRepo.class);
-//        mapper = Mockito.mock(ObjectMapper.class);
-//        service = new StaffService(repo, mapper);
-//    }
+    private StaffService service;   //-> service = new StaffService(repo, mapper);
     
     @Test
     void create(){
@@ -97,8 +90,6 @@ public class StaffServiceTest {
         }
         Staff[] first10 = Arrays.copyOfRange(staffArr, 0, 9);
         List<Staff> first10List = Arrays.asList(first10);
-        
-        
         Page<Staff> page = new PageImpl<>(first10List, Pageable.ofSize(10), 15);
         
         when(repo.findAll(PageRequest.of(pageNo, 10))).thenReturn(page);
