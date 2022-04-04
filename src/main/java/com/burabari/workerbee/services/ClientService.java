@@ -7,7 +7,10 @@ package com.burabari.workerbee.services;
 import com.burabari.workerbee.models.Client;
 import com.burabari.workerbee.repos.ClientsRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,5 +32,10 @@ public class ClientService {
     public Client create(Client client) {
         Client saved = repo.save(client);
         return saved;
+    }
+    
+    public List<Client> getPage(int pageNo, int pageSize) {
+        Page<Client> page = repo.findAll(PageRequest.of(pageNo, pageSize));
+        return page.toList();
     }
 }

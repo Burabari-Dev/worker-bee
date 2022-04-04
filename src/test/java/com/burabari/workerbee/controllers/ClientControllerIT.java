@@ -9,6 +9,9 @@ import com.burabari.workerbee.services.ClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +21,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.web.servlet.function.RequestPredicates.contentType;
 
 /**
  *
@@ -64,5 +67,20 @@ public class ClientControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(clientJson))
                 .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    void getPage_Should_Return_Status_200() throws Exception{
+        int page = 2;
+        int size = 12;
+        List<Client> clients = Arrays.asList(new Client[10]);
+        
+        Mockito.when(service.getPage(page, size)).thenReturn(clients);
+        
+        mockMvc.perform(get("/api/clients")
+                .param("page", "2")
+                .param("size", "12")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
