@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,11 +37,15 @@ public class Client {
     private List<String> emails;
     @ElementCollection
     private List<String> phoneNos;
-    @OneToMany(targetEntity=Project.class, mappedBy="client")
+    @OneToMany(
+            targetEntity=Project.class, 
+            mappedBy="client", 
+            fetch = FetchType.LAZY)
     private Set<Project> projects;
     
 
-    public Client(String clientId, String name, List<String> emails, List<String> phoneNos) {
+    public Client(String clientId, String name, List<String> emails, 
+            List<String> phoneNos) {
         this.clientId = clientId;
         this.name = name;
         this.emails = emails;
