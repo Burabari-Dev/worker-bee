@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -154,6 +155,43 @@ public class StaffControllerIT {
         mockMvc.perform(put("/api/staff")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(staffJson))
+                .andExpect(status().isNotFound());
+    }
+    
+    
+    @Test
+    void deleteStaff_Should_Return_Status_204() throws Exception{
+        Long id = 1L;
+        
+        Mockito.when(service.delete(id)).thenReturn(true);
+        
+        mockMvc.perform(delete("/api/staff")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("id", id.toString()))
+                .andExpect(status().isNoContent());
+    }
+    
+    @Test
+    void deleteStaff_With_Null_ID_Should_Return_Status_400() throws Exception{
+        Long id = null;
+        
+        Mockito.when(service.delete(id)).thenThrow(IllegalArgumentException.class);
+        
+        mockMvc.perform(delete("/api/staff")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("id", ""))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    void deleteStaff_With_NonExistent_ID_Should_Return_Status_404() throws Exception{
+        Long id = 5L;
+        
+        Mockito.when(service.delete(id)).thenReturn(false);
+        
+        mockMvc.perform(delete("/api/staff")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("id", id.toString()))
                 .andExpect(status().isNotFound());
     }
 }

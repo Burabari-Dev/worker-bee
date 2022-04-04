@@ -63,7 +63,11 @@ public class StaffService {
         return true;
     }
 
-    public void delete(long id) throws Exception{
-        repo.deleteById(id);
+    public boolean delete(Long id) throws Exception{
+        if(repo.existsById(id)){
+            repo.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }
