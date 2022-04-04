@@ -23,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -105,5 +106,19 @@ public class StaffControllerIT {
         mockMvc.perform(get("/api/staff")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+    
+    @Test
+    void updateStaff_Should_Return_Status_204() throws Exception{
+        Staff updateStaff = new Staff("staff.new@email.com", UserType.STAFF);
+        updateStaff.setId(1L);
+        String staffJson = mapper.writeValueAsString(updateStaff);
+        
+        Mockito.when(service.update(updateStaff)).thenReturn(true);
+        
+        mockMvc.perform(put("/api/staff")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(staffJson))
+                .andExpect(status().isNoContent());
     }
 }
