@@ -61,9 +61,14 @@ public class StaffController {
     
     @PutMapping
     public ResponseEntity updateStaff(@RequestBody(required = true) Staff staff){
-        boolean updated = service.update(staff);
-        if(updated)
-            return ResponseEntity.noContent().build();
+        try {
+            boolean updated = service.update(staff);
+            if (updated) {
+                return ResponseEntity.noContent().build();
+            }
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.notFound().build();
     }
 }
