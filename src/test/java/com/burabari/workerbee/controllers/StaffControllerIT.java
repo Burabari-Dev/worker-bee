@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,5 +121,39 @@ public class StaffControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(staffJson))
                 .andExpect(status().isNoContent());
+    }
+    
+    @Test
+    void updateStaff_Without_Data_Should_Return_Status_400() throws Exception{
+        
+        Mockito.when(service.update(null)).thenThrow(NullPointerException.class);
+        
+        mockMvc.perform(put("/api/staff")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    void updateStaff_With_Empty_Data_Should_Return_Status_404() throws Exception{
+        String staffJson = "{}";
+        Mockito.when(service.update(null)).thenThrow(NullPointerException.class);
+        
+        mockMvc.perform(put("/api/staff")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(staffJson))
+                .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    void updateStaff_With_Wrong_Data_Should_Return_Status_404() throws Exception{
+        Staff updateStaff = new Staff("staff.new@email.com", UserType.STAFF);
+        updateStaff.setId(5L);
+        String staffJson = mapper.writeValueAsString(updateStaff);
+        Mockito.when(service.update(updateStaff)).thenReturn(false);
+        
+        mockMvc.perform(put("/api/staff")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(staffJson))
+                .andExpect(status().isNotFound());
     }
 }
