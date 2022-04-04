@@ -92,7 +92,7 @@ public class StaffServiceTest {
     }
     
     @Test
-    void update(){
+    void update() throws Exception{
         Staff updateStaff = new Staff("staff.new@email.com", UserType.STAFF);
         updateStaff.setId(1L);
         Staff dbStaff = new Staff("staff@email.com", UserType.STAFF);
