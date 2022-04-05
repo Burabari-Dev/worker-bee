@@ -8,6 +8,7 @@ import com.burabari.workerbee.models.Client;
 import com.burabari.workerbee.repos.ClientsRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,5 +38,9 @@ public class ClientService {
     public List<Client> getPage(int pageNo, int pageSize) {
         Page<Client> page = repo.findAll(PageRequest.of(pageNo, pageSize));
         return page.toList();
+    }
+    
+    public Optional<Client> findById(long id){
+        return repo.findById(id);
     }
 }
