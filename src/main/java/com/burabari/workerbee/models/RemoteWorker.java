@@ -52,9 +52,8 @@ public class RemoteWorker extends User{
     
     public RemoteWorker(String email, String password, UserType type, 
             LocalDate dateRegistered) {
-        this.email = email;
+        super(email, type);
         this.password = password;
-        this.type = type;
         this.dateRegistered = dateRegistered;
     }
 
