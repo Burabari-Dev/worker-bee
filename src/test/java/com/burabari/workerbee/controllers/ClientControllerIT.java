@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -24,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -138,5 +138,39 @@ public class ClientControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(clientJson))
                 .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    void deleteClient_Should_Return_Status_204() throws Exception{
+        Long id = 1L;
+        
+        Mockito.when(service.delete(id)).thenReturn(true);
+        
+        mockMvc.perform(delete("/api/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("id", id.toString()))
+                .andExpect(status().isNoContent());
+    }
+    
+    @Test
+    void deleteClient_With_Wrong_Id_Should_Return_Status_404() throws Exception{
+        Long id = 5L;
+        
+        Mockito.when(service.delete(id)).thenReturn(false);
+        
+        mockMvc.perform(delete("/api/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("id", id.toString()))
+                .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    void deleteClient_With_Null_Id_Should_Return_Status_400() throws Exception{
+        String id = "";
+        
+        mockMvc.perform(delete("/api/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("id", id))
+                .andExpect(status().isBadRequest());
     }
 }
