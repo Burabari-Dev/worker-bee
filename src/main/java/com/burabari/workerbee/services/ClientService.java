@@ -43,4 +43,13 @@ public class ClientService {
     public Optional<Client> findById(long id){
         return repo.findById(id);
     }
+    
+    public boolean update(Client client) throws IllegalArgumentException{
+        if(client == null)
+            throw new IllegalArgumentException();
+        if(! repo.existsById(client.getId()))
+            return false;
+        repo.save(client);
+        return true;
+    }
 }
