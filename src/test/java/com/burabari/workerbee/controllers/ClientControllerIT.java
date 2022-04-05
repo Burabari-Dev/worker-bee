@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,21 @@ public class ClientControllerIT {
         mockMvc.perform(get("/api/clients")
                 .param("page", "2")
                 .param("size", "12")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    void getClientById_Should_Return_Status_200() throws Exception{
+        Long id = 1L;
+        Client dbClient = new Client("abc-34def", "ABC Inc.", new ArrayList<>(), new ArrayList<>());
+        dbClient.setId(id);
+        Optional<Client> opt = Optional.of(dbClient);
+        
+        Mockito.when(service.findById(id)).thenReturn(opt);
+        
+        mockMvc.perform(get("/api/clients")
+                .param("id", id.toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

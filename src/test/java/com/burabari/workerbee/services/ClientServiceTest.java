@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -68,5 +69,19 @@ public class ClientServiceTest {
         List<Client> clients = service.getPage(pageNo, 10);
         
         Assertions.assertThat(clients.size()).isBetween(0, 10);
+    }
+    
+    @Test
+    void findById(){
+        long id = 1L;
+        Client dbClient = new Client("abc-34def", "ABC Inc.", new ArrayList<>(), new ArrayList<>());
+        dbClient.setId(id);
+        Optional<Client> opt = Optional.of(dbClient);
+        
+        when(repo.findById(id)).thenReturn(opt);
+        
+        Optional<Client> byId = service.findById(id);
+        Assertions.assertThat(byId).isNotNull();
+        Assertions.assertThat(byId).isInstanceOf(Optional.class);
     }
 }
