@@ -23,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -98,5 +99,44 @@ public class ClientControllerIT {
                 .param("id", id.toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+    
+    @Test
+    void updateClient_Should_Return_Status_204() throws Exception {
+        Client newClient = new Client("abc-34def", "ABC Inc.", new ArrayList<>(), new ArrayList<>());
+        newClient.setId(1L);
+        String clientJson = mapper.writeValueAsString(newClient);
+        
+        Mockito.when(service.update(newClient)).thenReturn(true);
+        
+        mockMvc.perform(put("/api/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(clientJson))
+                .andExpect(status().isNoContent());
+    }
+    
+    @Test
+    void updateClient_With_No_Data_Should_Return_Status_400() throws Exception {
+        Client newClient = null;
+        String clientJson = "";
+        
+        mockMvc.perform(put("/api/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(clientJson))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    void updateClient_With_Wrong_Data_Should_Return_Status_404() throws Exception {
+        Client newClient = new Client("abc-34def", "ABC Inc.", new ArrayList<>(), new ArrayList<>());
+        newClient.setId(1L);
+        String clientJson = mapper.writeValueAsString(newClient);
+        
+        Mockito.when(service.update(newClient)).thenReturn(false);
+        
+        mockMvc.perform(put("/api/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(clientJson))
+                .andExpect(status().isNotFound());
     }
 }
