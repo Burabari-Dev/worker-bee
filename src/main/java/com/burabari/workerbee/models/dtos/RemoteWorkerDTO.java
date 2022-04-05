@@ -32,15 +32,17 @@ public class RemoteWorkerDTO {
     private List<Job> jobs;
     private Set<Role> roles;
     
-    public RemoteWorkerDTO(String email, UserType type, 
+    public RemoteWorkerDTO(long id, String email, UserType type, 
             LocalDate dateRegistered){
+        this.id = id;
         this.email = email;
         this.type = type;
         this.dateRegistered = dateRegistered;
     }
     
-    public RemoteWorkerDTO(String email, String password, UserType type, 
+    public RemoteWorkerDTO(long id, String email, String password, UserType type, 
             LocalDate dateRegistered){
+        this.id = id;
         this.email = email;
         this.password = password;
         this.type = type;
