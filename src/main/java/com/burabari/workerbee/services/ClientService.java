@@ -52,4 +52,12 @@ public class ClientService {
         repo.save(client);
         return true;
     }
+    
+    public boolean delete(long id){
+        if(! repo.existsById(id))
+            return false;
+        repo.deleteById(id);
+        //TODO: -> Cannot delete client if Projects exist.
+        return true;
+    }
 }

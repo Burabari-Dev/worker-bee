@@ -127,4 +127,20 @@ public class ClientServiceTest {
 
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class);
     }
+    
+    @Test
+    void delete(){
+        long id = 1L;        
+        when(repo.existsById(id)).thenReturn(true);
+        boolean deleted = service.delete(id);
+        Assertions.assertThat(deleted).isTrue();
+    }
+    
+    @Test
+    void delete_Non_Existent_Id(){
+        long id = 5L;        
+        when(repo.existsById(id)).thenReturn(false);
+        boolean deleted = service.delete(id);
+        Assertions.assertThat(deleted).isFalse();
+    }
 }
