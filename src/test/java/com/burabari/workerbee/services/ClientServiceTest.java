@@ -72,7 +72,7 @@ public class ClientServiceTest {
     }
     
     @Test
-    void getClient(){
+    void findById(){
         long id = 1L;
         Client dbClient = new Client("abc-34def", "ABC Inc.", new ArrayList<>(), new ArrayList<>());
         dbClient.setId(id);
