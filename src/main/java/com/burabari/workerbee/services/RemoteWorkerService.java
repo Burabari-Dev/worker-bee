@@ -8,8 +8,12 @@ import com.burabari.workerbee.models.RemoteWorker;
 import com.burabari.workerbee.models.dtos.RemoteWorkerDTO;
 import com.burabari.workerbee.repos.RemoteWorkersRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
@@ -43,5 +47,13 @@ public class RemoteWorkerService {
             return Optional.empty();
         RemoteWorkerDTO dto = mapper.convertValue(opt.get(), RemoteWorkerDTO.class);
         return Optional.of(dto);
+    }
+    
+    public List<RemoteWorkerDTO> getPage(int no, int size){
+        Page<RemoteWorker> page = repo.findAll(PageRequest.of(no, size));
+        List<RemoteWorkerDTO> dtos = page.get().map(worker -> mapper
+                .convertValue(worker, RemoteWorkerDTO.class))
+                .collect(Collectors.toList());
+        return dtos;
     }
 }
