@@ -11,6 +11,7 @@ import com.burabari.workerbee.repos.ProjectsRepo;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -27,13 +28,16 @@ public class ProjectService {
         this.repo = repo;
         this.clientRepo = clientRepo;
     }
-    
+     
     /**
-     * Creates a project record by adding to a Client record.
+     * Creates a project record by adding to a Client record. The method is
+     * annotated @Transactional so that the Project save and Client update 
+     * (merge) operation either both succeed or both fail.
      * @param clientId Client database id
      * @param project Project to be saved
      * @return true if saved. False if no client record with given id
      */
+    @Transactional
     public Optional<Project> create(long clientId, Project project){              //->    TODO: Return the Project and check for ID
         Optional<Client> clientOpt = clientRepo.findById(clientId);
         if(clientOpt.isEmpty())
