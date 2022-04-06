@@ -28,6 +28,12 @@ public class ProjectService {
         this.clientRepo = clientRepo;
     }
     
+    /**
+     * Creates a project record by adding to a Client record.
+     * @param clientId Client database id
+     * @param project Project to be saved
+     * @return true if saved. False if no client record with given id
+     */
     public boolean create(long clientId, Project project){              //->    TODO: Return the Project and check for ID
         Optional<Client> clientOpt = clientRepo.findById(clientId);
         if(clientOpt.isEmpty())
