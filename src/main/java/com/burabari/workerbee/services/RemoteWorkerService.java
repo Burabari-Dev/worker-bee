@@ -36,4 +36,12 @@ public class RemoteWorkerService {
         RemoteWorkerDTO dto = mapper.convertValue(saved, RemoteWorkerDTO.class);
         return Optional.of(dto);
     }
+    
+    public Optional<RemoteWorkerDTO> findById(long id){
+        Optional<RemoteWorker> opt = repo.findById(id);
+        if(opt.isEmpty())
+            return Optional.empty();
+        RemoteWorkerDTO dto = mapper.convertValue(opt.get(), RemoteWorkerDTO.class);
+        return Optional.of(dto);
+    }
 }
