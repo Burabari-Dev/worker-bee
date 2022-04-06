@@ -6,10 +6,8 @@ package com.burabari.workerbee.services;
 
 import com.burabari.workerbee.models.RemoteWorker;
 import com.burabari.workerbee.models.dtos.RemoteWorkerDTO;
-import com.burabari.workerbee.models.enums.UserType;
 import com.burabari.workerbee.repos.RemoteWorkersRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,9 +15,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.isA;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.hamcrest.CoreMatchers.any;
+import static org.hamcrest.CoreMatchers.isA;
 
 /**
  *
@@ -57,5 +55,22 @@ public class RemoteWorkerServiceTest {
         Optional<RemoteWorkerDTO> opt = service.create(worker);
         
         Assertions.assertThat(opt.isPresent()).isFalse();
+    }
+    
+    @Test
+    void findById(){
+        long id = 1L;
+        RemoteWorker dbWorker = new RemoteWorker();
+        RemoteWorkerDTO dto = new RemoteWorkerDTO();
+        dbWorker.setId(id);
+        dto.setId(id);
+        Optional opt = Optional.of(dbWorker);
+        
+        when(repo.findById(id)).thenReturn(opt);
+        when(mapper.convertValue(dbWorker, RemoteWorkerDTO.class)).thenReturn(dto);
+        
+        Optional optWorker = service.findById(id);
+        
+        Assertions.assertThat(optWorker.isPresent()).isTrue();
     }
 }
