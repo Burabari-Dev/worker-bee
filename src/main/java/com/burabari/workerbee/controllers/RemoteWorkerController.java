@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,5 +61,16 @@ public class RemoteWorkerController {
             @RequestParam(name = "size", required = false, defaultValue = "10") int size){
         List<RemoteWorkerDTO> dtos = service.getPage(page, size);
         return ResponseEntity.ok(dtos);
+    }
+    
+    @PutMapping
+    public ResponseEntity updateWorker(
+            @RequestBody(required = true) RemoteWorker worker){
+        if(worker == null)
+            return ResponseEntity.badRequest().build();
+        boolean updated = service.update(worker);
+        if(updated)
+            return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 }
