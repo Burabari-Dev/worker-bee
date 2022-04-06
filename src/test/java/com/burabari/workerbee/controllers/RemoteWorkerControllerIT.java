@@ -6,8 +6,10 @@ package com.burabari.workerbee.controllers;
 
 import com.burabari.workerbee.models.RemoteWorker;
 import com.burabari.workerbee.models.dtos.RemoteWorkerDTO;
+import com.burabari.workerbee.models.enums.UserType;
 import com.burabari.workerbee.services.RemoteWorkerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +24,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -35,9 +38,10 @@ public class RemoteWorkerControllerIT {
     @MockBean
     private RemoteWorkerService service;
     @Autowired
+    private ObjectMapper mapper;
+    @Autowired
     private MockMvc mockMvc;
     
-    private final ObjectMapper mapper = new ObjectMapper();
     
     @Test
     void createWorker_Should_Return_Status_201_Created_Client() throws Exception {
@@ -110,6 +114,47 @@ public class RemoteWorkerControllerIT {
                 .param("size", ""+pageSize)
                 .param("page", ""+pageNo))
                 .andExpect(status().isOk());
+    }
+    
+    @Test
+    void updateWorker_Should_Return_Status_204() throws Exception{
+        RemoteWorker worker = new RemoteWorker("worker@email.com", UserType.REMOTE, LocalDate.now());
+        worker.setId(1L);
+        String json = mapper.writeValueAsString(worker);
+        
+        Mockito.when(service.update(worker)).thenReturn(true);
+        
+        mockMvc.perform(put("/api/workers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isNoContent());
+    }
+    
+    @Test
+    void updateWorker_With_Wrong_ID_Should_Return_Status_404() throws Exception{
+        RemoteWorker worker = new RemoteWorker("worker@email.com", UserType.REMOTE, LocalDate.now());
+        worker.setId(5L);
+        String json = mapper.writeValueAsString(worker);
+        
+        Mockito.when(service.update(worker)).thenReturn(false);
+        
+        mockMvc.perform(put("/api/workers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    void updateWorker_Without_Data_Should_Return_Status_400() throws Exception{
+        RemoteWorker worker = null;
+        String json = "";
+        
+        Mockito.when(service.update(worker)).thenReturn(true);
+        
+        mockMvc.perform(put("/api/workers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isBadRequest());
     }
     
 }
