@@ -34,13 +34,16 @@ public class ProjectService {
      * @param project Project to be saved
      * @return true if saved. False if no client record with given id
      */
-    public boolean create(long clientId, Project project){              //->    TODO: Return the Project and check for ID
+    public Optional<Project> create(long clientId, Project project){              //->    TODO: Return the Project and check for ID
         Optional<Client> clientOpt = clientRepo.findById(clientId);
         if(clientOpt.isEmpty())
-            return false;
+            return Optional.empty();
+        
+        Project dbProject = repo.save(project);
+        
         Client client = clientOpt.get();
-        client.getProjects().add(project);
+        client.getProjects().add(dbProject);
         clientRepo.save(client);
-        return true;
+        return Optional.of(project);
     }
 }

@@ -40,26 +40,28 @@ public class ProjectServiceTest {
         Client dbClient = new Client();
         dbClient.setId(id);
         dbClient.setProjects(new HashSet<>(new ArrayList<Project>()));
-        Optional<Client> opt = Optional.of(dbClient);
+        Optional<Client> optC = Optional.of(dbClient);
+        Optional<Project> optP = Optional.of(project);
         
-        when(clientRepo.findById(id)).thenReturn(opt);
-        when(clientRepo.save(dbClient)).thenReturn(any());
+        when(clientRepo.findById(id)).thenReturn(optC);
+        when(projRepo.save(project)).thenReturn(project);
+        when(clientRepo.save(dbClient)).thenReturn(dbClient);
         
-        boolean created = service.create(id, project);
+        Optional<Project> opt = service.create(id, project);
         
-        Assertions.assertThat(created).isTrue();
+        Assertions.assertThat(opt.isPresent()).isTrue();
     }
     
     @Test
     void create_With_Bad_Clinet_Id(){
         long id = 5L;
         Project project = new Project();
-        Optional<Client> opt = Optional.empty();
+        Optional<Client> optC = Optional.empty();
         
-        when(clientRepo.findById(id)).thenReturn(opt);
+        when(clientRepo.findById(id)).thenReturn(optC);
         
-        boolean created = service.create(id, project);
+        Optional<Project> opt = service.create(id, project);
         
-        Assertions.assertThat(created).isFalse();
+        Assertions.assertThat(opt.isPresent()).isFalse();
     }
 }
