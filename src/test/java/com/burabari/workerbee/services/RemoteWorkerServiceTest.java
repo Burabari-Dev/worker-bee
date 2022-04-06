@@ -125,9 +125,23 @@ public class RemoteWorkerServiceTest {
     @Test
     void update_Null_Worker(){
         RemoteWorker worker = null;
-        
         boolean updated = service.update(worker);
-        
         Assertions.assertThat(updated).isFalse();
+    }
+    
+    @Test
+    void delete(){
+        long id = 1L;
+        when(repo.existsById(id)).thenReturn(true);
+        boolean deleted = service.delete(id);
+        Assertions.assertThat(deleted).isTrue();
+    }
+    
+    @Test
+    void delete_Invalid_Id(){
+        long id = 5L;
+        when(repo.existsById(id)).thenReturn(false);
+        boolean deleted = service.delete(id);
+        Assertions.assertThat(deleted).isFalse();
     }
 }
