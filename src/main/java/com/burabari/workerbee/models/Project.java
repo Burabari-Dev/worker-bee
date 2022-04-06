@@ -33,7 +33,7 @@ public class Project extends Work{
     private String projectId;
     private ProjectStatus status;
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "client_id", nullable = true, updatable = false, insertable = false)
+    @JoinColumn(name = "client_id", nullable = true, updatable = false, insertable = false) //-> TODO: insertable = true ?? 
     public Client client;
     @OneToMany(targetEntity=Job.class, mappedBy="project", 
             orphanRemoval = true, fetch = FetchType.EAGER)
