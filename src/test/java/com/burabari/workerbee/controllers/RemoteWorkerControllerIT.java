@@ -9,20 +9,19 @@ import com.burabari.workerbee.models.dtos.RemoteWorkerDTO;
 import com.burabari.workerbee.services.RemoteWorkerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.mockito.Mockito.any;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 /**
  *
@@ -67,6 +66,32 @@ public class RemoteWorkerControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(workerJson))
                 .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    void findWorkerById_Should_Return_Status_200() throws Exception{
+        long id = 1L;
+        RemoteWorkerDTO workerDto = new RemoteWorkerDTO();
+        workerDto.setId(id);
+        Optional opt = Optional.of(workerDto);
+        String json = mapper.writeValueAsString(workerDto);
+        
+        Mockito.when(service.findById(id)).thenReturn(opt);
+        
+        mockMvc.perform(get("/api/workers/"+id)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(json))
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    void findWorkerById_WIth_NonExisting_Id_Should_Return_Status_404() throws Exception{
+        long id = 1L;
+        Mockito.when(service.findById(id)).thenReturn(Optional.empty());
+        
+        mockMvc.perform(get("/api/workers/"+id)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
     
 }
