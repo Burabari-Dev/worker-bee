@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.anyList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,6 +24,7 @@ import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -154,6 +154,30 @@ public class RemoteWorkerControllerIT {
         mockMvc.perform(put("/api/workers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    void deleteWorker_Should_Return_Status_204() throws Exception {
+        long id = 1L;
+        
+        Mockito.when(service.delete(id)).thenReturn(true);
+        
+        mockMvc.perform(delete("/api/workers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("id", ""+id))
+                .andExpect(status().isNoContent());
+    }
+    
+    @Test
+    void deleteWorker_With_Bad_Id_Should_Return_Status_400() throws Exception {
+        long id = 5L;
+        
+        Mockito.when(service.delete(id)).thenReturn(false);
+        
+        mockMvc.perform(delete("/api/workers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("id", ""+id))
                 .andExpect(status().isBadRequest());
     }
     
