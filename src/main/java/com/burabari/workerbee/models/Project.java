@@ -30,21 +30,33 @@ import lombok.NoArgsConstructor;
 @Table(name = "project")
 public class Project extends Work {
 
-    @Column(name = "custom_proj_id", unique = true, nullable = false)
+    @Column(name = "custom_proj_id",
+            unique = true,
+            nullable = false)
     private String projectId;
 
     private ProjectStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "client_id", nullable = true, updatable = false, insertable = false) //-> TODO: insertable = true ?? 
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            optional = true)
+    @JoinColumn(
+            name = "client_id",
+            nullable = true,
+            updatable = false,
+            insertable = false) //-> TODO: insertable = true ?? 
     public Client client;
 
-    @OneToMany(targetEntity = Job.class, mappedBy = "project",
-            orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(
+            targetEntity = Job.class,
+            mappedBy = "project",
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
     private Set<Job> jobs;
 
     public Project(String projectId, ProjectStatus status, Set<String> techStack,
             String title, String description, LocalDate start, LocalDate plannedEnd) {
+
         super(title, description, start, plannedEnd, techStack);
         this.projectId = projectId;
         this.status = status;
