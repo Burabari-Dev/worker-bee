@@ -8,9 +8,12 @@ import com.burabari.workerbee.models.RemoteWorker;
 import com.burabari.workerbee.models.dtos.RemoteWorkerDTO;
 import com.burabari.workerbee.services.RemoteWorkerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.anyList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -92,6 +95,21 @@ public class RemoteWorkerControllerIT {
         mockMvc.perform(get("/api/workers/"+id)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    void getPage_Should_Return_Status_200() throws Exception{
+        int pageNo = 0;
+        int pageSize = 10;
+        List<RemoteWorkerDTO> dtos = Arrays.asList(new RemoteWorkerDTO[10]);
+        
+        Mockito.when(service.getPage(pageNo, pageSize)).thenReturn(dtos);
+        
+        mockMvc.perform(get("/api/workers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("size", ""+pageSize)
+                .param("page", ""+pageNo))
+                .andExpect(status().isOk());
     }
     
 }

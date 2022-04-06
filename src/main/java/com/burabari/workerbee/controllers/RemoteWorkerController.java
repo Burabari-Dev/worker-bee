@@ -8,6 +8,7 @@ import com.burabari.workerbee.models.RemoteWorker;
 import com.burabari.workerbee.models.dtos.RemoteWorkerDTO;
 import com.burabari.workerbee.services.RemoteWorkerService;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -50,5 +52,13 @@ public class RemoteWorkerController {
             @PathVariable(required = true) long id){
         Optional<RemoteWorkerDTO> opt = service.findById(id);
         return ResponseEntity.of(opt);
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<RemoteWorkerDTO>> getPage(
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") int size){
+        List<RemoteWorkerDTO> dtos = service.getPage(page, size);
+        return ResponseEntity.ok(dtos);
     }
 }

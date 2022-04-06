@@ -8,6 +8,8 @@ import com.burabari.workerbee.models.RemoteWorker;
 import com.burabari.workerbee.models.dtos.RemoteWorkerDTO;
 import com.burabari.workerbee.repos.RemoteWorkersRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,9 +17,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.hamcrest.CoreMatchers.any;
-import static org.hamcrest.CoreMatchers.isA;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
@@ -72,5 +78,21 @@ public class RemoteWorkerServiceTest {
         Optional optWorker = service.findById(id);
         
         Assertions.assertThat(optWorker.isPresent()).isTrue();
+    }
+    
+    @Test
+    void getPage(){
+        int pageNo = 3;
+        int size = 8;
+        List<RemoteWorker> workers = Arrays.asList(new RemoteWorker[8]);
+        Page page = new PageImpl(workers, Pageable.ofSize(size), 50);
+        
+        when(repo.findAll(PageRequest.of(pageNo, size))).thenReturn(page);
+        when(mapper.convertValue(any(), eq(RemoteWorkerDTO.class)))
+                .thenReturn(any(RemoteWorkerDTO.class));
+        
+        List<RemoteWorkerDTO> dtos = service.getPage(pageNo, size);
+        
+        Assertions.assertThat(dtos.size()).isBetween(0, 8);
     }
 }
