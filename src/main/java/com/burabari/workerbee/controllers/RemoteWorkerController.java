@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,5 +73,14 @@ public class RemoteWorkerController {
         if(updated)
             return ResponseEntity.noContent().build();
         return ResponseEntity.notFound().build();
+    }
+    
+    @DeleteMapping
+    public ResponseEntity deleteWorker(
+            @RequestParam(name = "id", required = true) long id){
+        boolean deleted = service.delete(id);
+        if(deleted)
+            return ResponseEntity.noContent().build();
+        return ResponseEntity.badRequest().build();
     }
 }
