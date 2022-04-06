@@ -56,4 +56,13 @@ public class RemoteWorkerService {
                 .collect(Collectors.toList());
         return dtos;
     }
+    
+    public boolean update(RemoteWorker worker){
+        if(worker == null)
+            return false;
+        if(! repo.existsById(worker.getId()))
+            return false;
+        repo.save(worker);
+        return true;
+    }
 }
