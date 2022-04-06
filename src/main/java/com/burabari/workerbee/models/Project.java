@@ -28,14 +28,18 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Table(name = "project")
-public class Project extends Work{
+public class Project extends Work {
+
     @Column(name = "custom_proj_id", unique = true, nullable = false)
     private String projectId;
+
     private ProjectStatus status;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "client_id", nullable = true, updatable = false, insertable = false) //-> TODO: insertable = true ?? 
     public Client client;
-    @OneToMany(targetEntity=Job.class, mappedBy="project", 
+
+    @OneToMany(targetEntity = Job.class, mappedBy = "project",
             orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Job> jobs;
 
@@ -45,5 +49,5 @@ public class Project extends Work{
         this.projectId = projectId;
         this.status = status;
     }
-    
+
 }
