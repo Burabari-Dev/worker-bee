@@ -6,8 +6,10 @@ package com.burabari.workerbee.services;
 
 import com.burabari.workerbee.models.RemoteWorker;
 import com.burabari.workerbee.models.dtos.RemoteWorkerDTO;
+import com.burabari.workerbee.models.enums.UserType;
 import com.burabari.workerbee.repos.RemoteWorkersRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -94,5 +96,38 @@ public class RemoteWorkerServiceTest {
         List<RemoteWorkerDTO> dtos = service.getPage(pageNo, size);
         
         Assertions.assertThat(dtos.size()).isBetween(0, 8);
+    }
+    
+    @Test
+    void update(){
+        RemoteWorker worker = new RemoteWorker("worker@email.com", UserType.REMOTE, LocalDate.now());
+        worker.setId(1L);
+        
+        when(repo.existsById(worker.getId())).thenReturn(true);
+        
+        boolean updated = service.update(worker);
+        
+        Assertions.assertThat(updated).isTrue();
+    }
+    
+    @Test
+    void update_Bad_Id(){
+        RemoteWorker worker = new RemoteWorker("worker@email.com", UserType.REMOTE, LocalDate.now());
+        worker.setId(5L);
+        
+        when(repo.existsById(worker.getId())).thenReturn(false);
+        
+        boolean updated = service.update(worker);
+        
+        Assertions.assertThat(updated).isFalse();
+    }
+    
+    @Test
+    void update_Null_Worker(){
+        RemoteWorker worker = null;
+        
+        boolean updated = service.update(worker);
+        
+        Assertions.assertThat(updated).isFalse();
     }
 }
