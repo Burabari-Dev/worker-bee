@@ -9,7 +9,9 @@ import com.burabari.workerbee.models.Project;
 import com.burabari.workerbee.repos.ClientsRepo;
 import com.burabari.workerbee.repos.ProjectsRepo;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.when;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 /**
  *
@@ -94,5 +101,20 @@ public class ProjectServiceTest {
         Optional<Project> opt = service.findByProjectId(projId);
         
         Assertions.assertThat(opt.isPresent()).isFalse();
+    }
+    
+    @Test
+    void getPage(){
+        int pageNo = 1;
+        int pageSize = 10;
+        List<Project> projects = Arrays.asList(new Project[pageSize]);
+        Pageable pageable = PageRequest.of(pageNo, pageSize);                   //-> TODO: Make other pageables use this pattern
+        Page<Project> page = new PageImpl(projects, pageable, 100);
+        
+        when(projRepo.findAll(pageable)).thenReturn(page);
+        
+        List<Project> projectList = service.getPage(pageNo, pageSize);
+        
+        Assertions.assertThat(projectList.size()).isBetween(0, 10);
     }
 }
