@@ -8,8 +8,11 @@ import com.burabari.workerbee.models.Client;
 import com.burabari.workerbee.models.Project;
 import com.burabari.workerbee.repos.ClientsRepo;
 import com.burabari.workerbee.repos.ProjectsRepo;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,5 +58,10 @@ public class ProjectService {
         if(projId == null || projId.isBlank())
             return Optional.empty();
         return repo.findByProjectId(projId);
+    }
+    
+    public List<Project> getPage(int pageNo, int pageSize){
+        Page<Project> page = repo.findAll(PageRequest.of(pageNo, pageSize));
+        return page.toList();
     }
 }
