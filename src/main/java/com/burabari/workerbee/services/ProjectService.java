@@ -38,7 +38,7 @@ public class ProjectService {
      * @return true if saved. False if no client record with given id
      */
     @Transactional
-    public Optional<Project> create(long clientId, Project project){              //->    TODO: Return the Project and check for ID
+    public Optional<Project> create(long clientId, Project project){            //->    TODO: Return the Project and check for ID
         Optional<Client> clientOpt = clientRepo.findById(clientId);
         if(clientOpt.isEmpty())
             return Optional.empty();
@@ -49,5 +49,11 @@ public class ProjectService {
         client.getProjects().add(dbProject);
         clientRepo.save(client);
         return Optional.of(project);
+    }
+    
+    public Optional<Project> findByProjectId(String projId){
+        if(projId == null || projId.isBlank())
+            return Optional.empty();
+        return repo.findByProjectId(projId);
     }
 }
