@@ -18,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
 
 /**
  *
@@ -61,6 +60,38 @@ public class ProjectServiceTest {
         when(clientRepo.findById(id)).thenReturn(optC);
         
         Optional<Project> opt = service.create(id, project);
+        
+        Assertions.assertThat(opt.isPresent()).isFalse();
+    }
+    
+    @Test
+    void findByProjectId() {
+        String projId = "abc-123";
+        Project project = new Project();
+        project.setProjectId(projId);
+        Optional<Project> projectOpt = Optional.of(project);
+        
+        when(projRepo.findByProjectId(projId)).thenReturn(projectOpt);
+        
+        Optional<Project> opt = service.findByProjectId(projId);
+        
+        Assertions.assertThat(opt.isPresent()).isTrue();
+    }
+    
+    @Test
+    void findByProjectId_WIth_Null_Id() {
+        String projId = null;
+        
+        Optional<Project> opt = service.findByProjectId(projId);
+        
+        Assertions.assertThat(opt.isPresent()).isFalse();
+    }
+    
+    @Test
+    void findByProjectId_WIth_Empty_Id() {
+        String projId = "";
+        
+        Optional<Project> opt = service.findByProjectId(projId);
         
         Assertions.assertThat(opt.isPresent()).isFalse();
     }
