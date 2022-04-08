@@ -63,4 +63,29 @@ public class JobControllerIT {
                 .content(JobJson))
                 .andExpect(status().isBadRequest());
     }
+    
+    @Test
+    void getByCustomId_Should_Return_Status_200() throws Exception{
+        String customId = "123-abc";
+        Job job = new Job();
+        job.setCustomJobId(customId);
+        Optional<Job> jobOpt = Optional.of(job);
+        
+        when(service.getByCustomId(customId)).thenReturn(jobOpt);
+        
+        mockMvc.perform(get(BASE_URL)
+                .contentType(APP_JSON)
+                .param("custId", customId))
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    void getByCustomId_With_Bad_Id_Should_Return_Status_400() throws Exception{
+        String customId = "";
+        
+        mockMvc.perform(get(BASE_URL)
+                .contentType(APP_JSON)
+                .param("custId", customId))
+                .andExpect(status().isBadRequest());
+    }
 }
