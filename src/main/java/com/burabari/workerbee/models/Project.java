@@ -9,6 +9,7 @@ import com.burabari.workerbee.models.pojos.Work;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -49,6 +50,7 @@ public class Project extends Work {
     public Client client;
 
     @OneToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             targetEntity = Job.class,
             mappedBy = "project",
             orphanRemoval = true,
