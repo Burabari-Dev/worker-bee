@@ -6,8 +6,10 @@ package com.burabari.workerbee.services;
 
 import com.burabari.workerbee.models.Client;
 import com.burabari.workerbee.models.Project;
+import com.burabari.workerbee.models.enums.ProjectStatus;
 import com.burabari.workerbee.repos.ClientsRepo;
 import com.burabari.workerbee.repos.ProjectsRepo;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -116,5 +118,33 @@ public class ProjectServiceTest {
         List<Project> projectList = service.getPage(pageNo, pageSize);
         
         Assertions.assertThat(projectList.size()).isBetween(0, 10);
+    }
+    
+    @Test
+    void update(){
+        Project newProject = new Project();
+        newProject.setId(1L);
+        Project dbProject = new Project();
+        dbProject.setId(1L);
+        Optional<Project> opt = Optional.of(dbProject);
+        
+        when(projRepo.findById(newProject.getId())).thenReturn(opt);
+        when(projRepo.save(dbProject)).thenReturn(dbProject);
+        
+        boolean updated = service.update(newProject);
+        
+        Assertions.assertThat(updated).isTrue();
+    }
+    
+    @Test
+    void update_With_Invalid_Id(){
+        Project newProject = new Project();
+        newProject.setId(1L);
+        
+        when(projRepo.findById(newProject.getId())).thenReturn(Optional.empty());
+        
+        boolean updated = service.update(newProject);
+        
+        Assertions.assertThat(updated).isFalse();
     }
 }
