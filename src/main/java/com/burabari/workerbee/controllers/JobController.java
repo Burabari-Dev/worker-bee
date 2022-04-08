@@ -7,6 +7,7 @@ package com.burabari.workerbee.controllers;
 import com.burabari.workerbee.models.Job;
 import com.burabari.workerbee.services.JobService;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -60,6 +61,15 @@ public class JobController {
         
         Optional<Job> opt = service.getByCustomId(customId);
         return ResponseEntity.of(opt);
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<Job>> getJobPage(
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") int size) {
+        
+        List<Job> jobs = service.getPage(page, size);
+        return ResponseEntity.ok(jobs);
     }
     
 }
