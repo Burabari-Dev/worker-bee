@@ -62,4 +62,26 @@ public class JobServiceTest {
         Assertions.assertThat(created.isPresent()).isFalse();
     }
     
+    @Test
+    void getByCustomId(){
+        String custId = "abc-123";
+        Job job = new Job();
+        job.setCustomJobId(custId);
+        Optional<Job> opt = Optional.of(job);
+        
+        when(repo.findBy_CustomJobId(custId)).thenReturn(opt);
+        Optional<Job> found = service.getByCustomId(custId);
+        
+        Assertions.assertThat(found.isPresent()).isTrue();
+    }
+    
+    @Test
+    void getByCustomId_With_Null_Custom_Id(){
+        String custId = null;
+        
+        Optional<Job> found = service.getByCustomId(custId);
+        
+        Assertions.assertThat(found.isPresent()).isFalse();
+    }
+    
 }
