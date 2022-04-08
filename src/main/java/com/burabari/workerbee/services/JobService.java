@@ -30,7 +30,7 @@ public class JobService {
     
     public Optional<Job> create(long projId, Job job){
         Optional<Project> optProj = projRepo.findById(projId);
-        if(optProj.isEmpty())
+        if(optProj.isEmpty() || job == null)
             return Optional.empty();
         
         Job dbJob = repo.save(job);
