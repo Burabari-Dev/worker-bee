@@ -69,4 +69,11 @@ public class JobService {
         repo.save(dbJob);
         return true;
     }
+    
+    public boolean delete(long id){
+        if(! repo.existsById(id))
+            return false;
+        repo.deleteById(id);
+        return true;
+    }
 }
