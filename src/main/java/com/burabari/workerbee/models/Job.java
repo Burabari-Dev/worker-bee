@@ -48,5 +48,17 @@ public class Job extends Work {
         this.jobValue = jobValue;
         this.project = project;
     }
+    
+    public void update(Job other){
+        actualEnd = other.actualEnd;
+        assigned = other.assigned;
+        customJobId = other.customJobId;
+        description = other.description;
+        jobValue = other.jobValue;
+        plannedEnd = other.plannedEnd;
+        start = other.start;
+        techStack = other.techStack;
+        title = other.title;
+    }
 
 }
