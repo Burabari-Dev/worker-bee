@@ -61,5 +61,17 @@ public class Project extends Work {
         this.projectId = projectId;
         this.status = status;
     }
+    
+    public void doUpdate(Project other){ //-> TODO: Create an Updatable interface add a doUpdate method for all updatable entities
+        this.actualEnd = other.actualEnd;
+        this.description = other.description;
+        this.plannedEnd = other.plannedEnd;
+        this.projectId = other.projectId;
+        this.start = other.start;
+        this.status = other.status;
+        this.title = other.title;
+        this.techStack = other.techStack;
+        this.jobs = other.jobs;
+    }
 
 }
