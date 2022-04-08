@@ -4,8 +4,11 @@
  */
 package com.burabari.workerbee.services;
 
+import com.burabari.workerbee.models.Job;
+import com.burabari.workerbee.models.Project;
 import com.burabari.workerbee.repos.JobsRepo;
 import com.burabari.workerbee.repos.ProjectsRepo;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,4 +28,17 @@ public class JobService {
         this.projRepo = projRepo;
     }
     
+    public Optional<Job> create(long projId, Job job){
+        Optional<Project> optProj = projRepo.findById(projId);
+        if(optProj.isEmpty())
+            return Optional.empty();
+        
+        Job dbJob = repo.save(job);
+        
+        Project project = optProj.get();
+        project.addJob(job);
+        projRepo.save(project);
+        
+        return Optional.of(dbJob);
+    }
 }
