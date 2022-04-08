@@ -20,8 +20,8 @@ import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.mockito.ArgumentMatchers.anyList;
 
 /**
  *
@@ -183,5 +183,39 @@ public class ProjectControllerIT {
                 .contentType(APP_JSON)
                 .content(json))
                 .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    void deleteProject_Should_Return_Status_204() throws Exception {
+        long id = 1L;
+        
+        when(service.delete(id)).thenReturn(true);
+        
+        mockMvc.perform(delete(BASE_URL)
+                .contentType(APP_JSON)
+                .param("id", ""+id))
+                .andExpect(status().isNoContent());
+    }
+    
+    @Test
+    void deleteProject_With_NonExistent_Id_Should_Return_Status_400() throws Exception {
+        long id = 5L;
+        
+        when(service.delete(id)).thenReturn(false);
+        
+        mockMvc.perform(delete(BASE_URL)
+                .contentType(APP_JSON)
+                .param("id", ""+id))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    void deleteProject_With_Invalid_Id_Should_Return_Status_400() throws Exception {
+        long id = 0;
+        
+        mockMvc.perform(delete(BASE_URL)
+                .contentType(APP_JSON)
+                .param("id", ""+id))
+                .andExpect(status().isBadRequest());
     }
 }
