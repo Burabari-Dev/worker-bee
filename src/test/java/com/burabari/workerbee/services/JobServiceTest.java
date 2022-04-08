@@ -8,6 +8,8 @@ import com.burabari.workerbee.models.Job;
 import com.burabari.workerbee.models.Project;
 import com.burabari.workerbee.repos.JobsRepo;
 import com.burabari.workerbee.repos.ProjectsRepo;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.when;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
@@ -84,4 +90,17 @@ public class JobServiceTest {
         Assertions.assertThat(found.isPresent()).isFalse();
     }
     
+    @Test
+    void getPage(){
+        int no = 4;
+        int size = 12;
+        List<Job> jobs = Arrays.asList(new Job[size]);
+        Pageable pageable = PageRequest.of(no, size);                   //-> TODO: Make other pageables use this pattern
+        Page<Job> page = new PageImpl(jobs, pageable, 500);
+        
+        when(repo.findAll(pageable)).thenReturn(page);
+        List<Job> jobPage = service.getPage(no, size);
+        
+        Assertions.assertThat(jobPage.size()).isBetween(0, size);
+    }
 }
