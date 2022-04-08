@@ -74,4 +74,15 @@ public class ProjectService {
         repo.save(dbProject);
         return true;
     }
+    
+    public boolean delete(long id){
+        Optional<Project> opt = repo.findById(id);
+        if(opt.isEmpty())
+            return false;
+        Project project = opt.get();
+//        if(project.getJobs() != null && ! project.getJobs().isEmpty())        //-> TODO: Add HasDependent check for all similar
+//            throw new HasDependentEntityException
+        repo.delete(project);
+        return true;
+    }
 }
