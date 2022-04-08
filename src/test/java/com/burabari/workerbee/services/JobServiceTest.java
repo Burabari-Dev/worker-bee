@@ -103,4 +103,28 @@ public class JobServiceTest {
         
         Assertions.assertThat(jobPage.size()).isBetween(0, size);
     }
+    
+    @Test
+    void update(){
+        Job job = new Job();
+        job.setId(1L);
+        job.setTitle("Test Job");
+        Job dbJob = new Job();
+        dbJob.setId(1L);
+        Optional<Job> opt = Optional.of(dbJob);
+        
+        when(repo.findById(job.getId())).thenReturn(opt);
+        boolean updated = service.update(job);
+        
+        Assertions.assertThat(updated).isTrue();
+    }
+    
+    @Test
+    void update_With_Null_Data(){
+        Job job = null;
+        
+        boolean updated = service.update(job);
+        
+        Assertions.assertThat(updated).isFalse();
+    }
 }
