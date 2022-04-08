@@ -4,10 +4,17 @@
  */
 package com.burabari.workerbee.controllers;
 
+import com.burabari.workerbee.models.Job;
 import com.burabari.workerbee.services.JobService;
+import java.net.URI;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -24,5 +31,21 @@ public class JobController {
     
     @Autowired
     private JobService service;
+    private final String BASE_URI = "/api/jobs/";
     
+    @PostMapping
+    public ResponseEntity<Job> createJob(
+            @RequestParam(name = "projId", required = true) long id,    // primitive long prefered to Object Long to avoid nulls
+            @RequestBody(required = true) Job job){
+        
+        if(id <= 0 || job == null)
+            return ResponseEntity.badRequest().build();
+        
+        Optional<Job> created = service.create(id, job);
+        if(created.isEmpty())
+            return ResponseEntity.badRequest().build();
+        
+        Job dbJob = created.get();
+        return ResponseEntity.created( URI.create(BASE_URI+dbJob.getCustomJobId()) ).body(job);
+    }
 }
