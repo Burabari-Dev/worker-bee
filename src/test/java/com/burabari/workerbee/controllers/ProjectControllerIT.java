@@ -7,6 +7,8 @@ package com.burabari.workerbee.controllers;
 import com.burabari.workerbee.models.Project;
 import com.burabari.workerbee.services.ProjectService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.ArgumentMatchers.anyList;
 
 /**
  *
@@ -27,6 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProjectControllerIT {
     
     private final String BASE_URL = "/api/projects";
+    private final MediaType APP_JSON = MediaType.APPLICATION_JSON;
+    
     @MockBean
     private ProjectService service;
     @Autowired
@@ -46,7 +51,7 @@ public class ProjectControllerIT {
         when(service.create(clientId, project)).thenReturn(opt);
         
         mockMvc.perform(post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APP_JSON)
                 .param("clientId", ""+clientId)
                 .content(json))
                 .andExpect(status().isCreated());
@@ -61,7 +66,7 @@ public class ProjectControllerIT {
         String json = mapper.writeValueAsString(project);
         
         mockMvc.perform(post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APP_JSON)
                 .param("clientId", ""+clientId)
                 .content(json))
                 .andExpect(status().isBadRequest());
@@ -74,7 +79,7 @@ public class ProjectControllerIT {
         String json = "";
         
         mockMvc.perform(post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APP_JSON)
                 .param("clientId", ""+clientId)
                 .content(json))
                 .andExpect(status().isBadRequest());
@@ -90,7 +95,7 @@ public class ProjectControllerIT {
         when(service.findByProjectId(projId)).thenReturn(opt);
         
         mockMvc.perform(get(BASE_URL + "/" + projId)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(APP_JSON))
                 .andExpect(status().isOk());
     }
     
@@ -102,7 +107,7 @@ public class ProjectControllerIT {
         when(service.findByProjectId(projId)).thenReturn(opt);
         
         mockMvc.perform(get(BASE_URL + "/" + projId)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(APP_JSON))
                 .andExpect(status().isNotFound());
     }
     
@@ -111,7 +116,33 @@ public class ProjectControllerIT {
         String projId = " ";
         
         mockMvc.perform(get(BASE_URL + "/" + projId)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(APP_JSON))
                 .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    void getPage_Should_Return_Status_200() throws Exception {
+        int page = 5;
+        int size = 8;
+        List<Project> projects = Arrays.asList(new Project[size]);
+        
+        when(service.getPage(page, size)).thenReturn(projects);
+        
+        mockMvc.perform(get(BASE_URL)
+                .contentType(APP_JSON)
+                .param("page", ""+page)
+                .param("size", ""+size))
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    void getPage_Whithout_Page_Or_Size_Should_Still_Return_Status_200() throws Exception {
+        List<Project> projects = Arrays.asList(new Project[10]);
+        
+        when(service.getPage(0, 10)).thenReturn(projects);  //-> Default page = 0 and default size = 10
+        
+        mockMvc.perform(get(BASE_URL)
+                .contentType(APP_JSON))
+                .andExpect(status().isOk());
     }
 }
