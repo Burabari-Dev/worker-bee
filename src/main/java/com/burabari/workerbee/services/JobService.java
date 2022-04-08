@@ -8,8 +8,11 @@ import com.burabari.workerbee.models.Job;
 import com.burabari.workerbee.models.Project;
 import com.burabari.workerbee.repos.JobsRepo;
 import com.burabari.workerbee.repos.ProjectsRepo;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
@@ -48,5 +51,10 @@ public class JobService {
         
         Optional<Job> opt = repo.findBy_CustomJobId(customId);
         return opt;
+    }
+    
+    public List<Job> getPage(int page, int size){
+        Page<Job> jobs = repo.findAll(PageRequest.of(page, size));
+        return jobs.toList();
     }
 }
