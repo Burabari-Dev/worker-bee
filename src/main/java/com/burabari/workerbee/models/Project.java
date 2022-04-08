@@ -7,7 +7,9 @@ package com.burabari.workerbee.models;
 import com.burabari.workerbee.models.enums.ProjectStatus;
 import com.burabari.workerbee.models.pojos.Work;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -48,6 +50,7 @@ public class Project extends Work {
     public Client client;
 
     @OneToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             targetEntity = Job.class,
             mappedBy = "project",
             orphanRemoval = true,
@@ -72,6 +75,12 @@ public class Project extends Work {
         this.title = other.title;
         this.techStack = other.techStack;
         this.jobs = other.jobs;
+    }
+    
+    public void addJob(Job job){    //-> TODO: Create an addXxx method to other Entities with collection entity fields
+        if(jobs == null)
+           jobs = new HashSet<>();
+        jobs.add(job);
     }
 
 }
