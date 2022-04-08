@@ -37,7 +37,7 @@ public abstract class Work {
     @Column(name ="actual_end", columnDefinition = "DATE")
     protected LocalDate actualEnd;
     @Column(name = "tech_stack")
-    @ElementCollection
+    @ElementCollection                  //-> TODO: Consider changing this to embeddable
     protected Set<String> techStack;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

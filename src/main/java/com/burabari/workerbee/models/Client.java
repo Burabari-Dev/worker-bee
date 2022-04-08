@@ -6,6 +6,7 @@ package com.burabari.workerbee.models;
 
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -38,6 +39,7 @@ public class Client {
     @ElementCollection
     private List<String> phoneNos;
     @OneToMany(
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
             targetEntity=Project.class, 
             mappedBy="client", 
             fetch = FetchType.LAZY)
