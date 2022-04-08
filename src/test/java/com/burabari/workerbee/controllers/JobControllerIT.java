@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -103,5 +104,19 @@ public class JobControllerIT {
                 .param("page", ""+pageNo)
                 .param("size", ""+size))
                 .andExpect(status().isOk());
+    }
+    
+    @Test
+    void updataJob_Should_Return_Status_204() throws Exception {
+        Job job = new Job();
+        job.setCustomJobId("abc-123");
+        String json = mapper.writeValueAsString(job);
+        
+        when(service.update(job)).thenReturn(true);
+        
+        mockMvc.perform(put(BASE_URL)
+                .contentType(APP_JSON)
+                .content(json))
+                .andExpect(status().isNoContent());
     }
 }
