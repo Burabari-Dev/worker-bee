@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -118,5 +119,39 @@ public class JobControllerIT {
                 .contentType(APP_JSON)
                 .content(json))
                 .andExpect(status().isNoContent());
+    }
+    
+    @Test
+    void deleteJob_Should_Return_Status_204() throws Exception {
+        long id = 1L;
+        
+        when(service.delete(id)).thenReturn(true);
+        
+        mockMvc.perform(delete(BASE_URL)
+                .contentType(APP_JSON)
+                .param("id", ""+id))
+                .andExpect(status().isNoContent());
+    }
+    
+    @Test
+    void deleteJob_With_Non_Existent_Id_Should_Return_Status_400() throws Exception {
+        long id = 77L;
+        
+        when(service.delete(id)).thenReturn(false);
+        
+        mockMvc.perform(delete(BASE_URL)
+                .contentType(APP_JSON)
+                .param("id", ""+id))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    void deleteJob_With_Invalid_Id_Should_Return_Status_400() throws Exception {
+        long id = -0L;
+                
+        mockMvc.perform(delete(BASE_URL)
+                .contentType(APP_JSON)
+                .param("id", ""+id))
+                .andExpect(status().isBadRequest());
     }
 }
