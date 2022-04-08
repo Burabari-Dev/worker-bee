@@ -41,4 +41,12 @@ public class JobService {
         
         return Optional.of(dbJob);
     }
+    
+    public Optional<Job> getByCustomId(String customId){
+        if(customId == null || customId.isBlank())
+            return Optional.empty();
+        
+        Optional<Job> opt = repo.findBy_CustomJobId(customId);
+        return opt;
+    }
 }
