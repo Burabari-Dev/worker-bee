@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -82,6 +83,16 @@ public class ProjectController {
         if(updated)
             return ResponseEntity.noContent().build();
         return ResponseEntity.notFound().build();
+    }
+    
+    @DeleteMapping
+    public ResponseEntity deleteProject(@RequestParam(name = "id", required = true) long id){
+        if(id <= 0)     //-> TODO: Do this test for all delete controller methods
+            return ResponseEntity.badRequest().build();
+        boolean deleted = service.delete(id);
+        if(deleted)
+            return ResponseEntity.noContent().build();
+        return ResponseEntity.badRequest().build();
     }
 
 }
