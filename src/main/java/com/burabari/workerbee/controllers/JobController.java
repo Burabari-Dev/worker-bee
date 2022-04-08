@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,5 +48,16 @@ public class JobController {
         
         Job dbJob = created.get();
         return ResponseEntity.created( URI.create(BASE_URI+dbJob.getCustomJobId()) ).body(job);
+    }
+    
+    @GetMapping
+    public ResponseEntity<Job> getByCustomId(
+            @RequestParam(name = "custId", required = true) String customId){
+        
+        if(customId == null || customId.isBlank())
+            return ResponseEntity.badRequest().build();
+        
+        Optional<Job> opt = service.getByCustomId(customId);
+        return ResponseEntity.of(opt);
     }
 }
