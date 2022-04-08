@@ -147,4 +147,29 @@ public class ProjectServiceTest {
         
         Assertions.assertThat(updated).isFalse();
     }
+    
+    @Test
+    void delete(){
+        long id = 1L;
+        Project dbProject = new Project();
+        dbProject.setId(1L);
+        Optional<Project> opt = Optional.of(dbProject);
+        
+        when(projRepo.findById(id)).thenReturn(opt);
+        
+        boolean deleted = service.delete(id);
+        
+        Assertions.assertThat(deleted).isTrue();
+    }
+    
+    @Test
+    void delete_With_Invalid_Id(){
+        long id = 5L;
+        
+        when(projRepo.findById(id)).thenReturn(Optional.empty());
+        
+        boolean deleted = service.delete(id);
+        
+        Assertions.assertThat(deleted).isFalse();
+    }
 }
