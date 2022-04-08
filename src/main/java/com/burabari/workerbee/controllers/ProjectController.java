@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -71,6 +72,16 @@ public class ProjectController {
         
         List<Project> projects = service.getPage(page, size);
         return ResponseEntity.ok(projects);
+    }
+    
+    @PutMapping
+    public ResponseEntity updateProject(@RequestBody(required = true) Project project){
+        if(project == null)
+            return ResponseEntity.badRequest().build();
+        boolean updated = service.update(project);
+        if(updated)
+            return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
 }
