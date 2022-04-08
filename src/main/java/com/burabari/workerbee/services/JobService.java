@@ -57,4 +57,16 @@ public class JobService {
         Page<Job> jobs = repo.findAll(PageRequest.of(page, size));
         return jobs.toList();
     }
+    
+    public boolean update(Job job){
+        if(job == null)
+            return false;
+        
+        Optional<Job> opt = repo.findById(job.getId());
+        
+        Job dbJob = opt.get();
+        dbJob.update(job);
+        repo.save(dbJob);
+        return true;
+    }
 }
