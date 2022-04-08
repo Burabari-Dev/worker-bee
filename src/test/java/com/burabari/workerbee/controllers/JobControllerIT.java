@@ -7,6 +7,8 @@ package com.burabari.workerbee.controllers;
 import com.burabari.workerbee.models.Job;
 import com.burabari.workerbee.services.JobService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +87,21 @@ public class JobControllerIT {
         
         mockMvc.perform(get(BASE_URL+"/"+customId)
                 .contentType(APP_JSON))
-//                .param("custId", customId))
                 .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    void getJobPage_Should_Return_Status_200() throws Exception {
+        int pageNo = 3;
+        int size = 10;
+        List<Job> jobs = Arrays.asList(new Job[10]);
+        
+        when(service.getPage(pageNo, size)).thenReturn(jobs);
+        
+        mockMvc.perform(get(BASE_URL)
+                .contentType(APP_JSON)
+                .param("page", ""+pageNo)
+                .param("size", ""+size))
+                .andExpect(status().isOk());
     }
 }
