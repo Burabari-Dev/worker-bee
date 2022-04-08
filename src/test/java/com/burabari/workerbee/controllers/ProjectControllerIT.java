@@ -19,6 +19,7 @@ import static org.mockito.Mockito.when;
 import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.ArgumentMatchers.anyList;
 
@@ -144,5 +145,43 @@ public class ProjectControllerIT {
         mockMvc.perform(get(BASE_URL)
                 .contentType(APP_JSON))
                 .andExpect(status().isOk());
+    }
+    
+    @Test
+    void updateProject_Should_Return_Status_204() throws Exception {
+        Project project = new Project();
+        project.setId(1L);
+        String json = mapper.writeValueAsString(project);
+                
+        when(service.update(project)).thenReturn(true);
+        
+        mockMvc.perform(put(BASE_URL)
+                .contentType(APP_JSON)
+                .content(json))
+                .andExpect(status().isNoContent());
+    }
+    
+    @Test
+    void updateProject_With_No_Data_Should_Return_Status_400() throws Exception {
+        String json = "";
+        
+        mockMvc.perform(put(BASE_URL)
+                .contentType(APP_JSON)
+                .content(json))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    void updateProject_With_Invalid_Data_Should_Return_Status_404() throws Exception {
+        Project project = new Project();
+        project.setId(5L);
+        String json = mapper.writeValueAsString(project);
+        
+        when(service.update(project)).thenReturn(false);
+        
+        mockMvc.perform(put(BASE_URL)
+                .contentType(APP_JSON)
+                .content(json))
+                .andExpect(status().isNotFound());
     }
 }
