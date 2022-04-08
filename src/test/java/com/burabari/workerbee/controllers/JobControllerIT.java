@@ -73,7 +73,7 @@ public class JobControllerIT {
         
         when(service.getByCustomId(customId)).thenReturn(jobOpt);
         
-        mockMvc.perform(get(BASE_URL)
+        mockMvc.perform(get(BASE_URL+"/"+customId)
                 .contentType(APP_JSON)
                 .param("custId", customId))
                 .andExpect(status().isOk());
@@ -81,11 +81,11 @@ public class JobControllerIT {
     
     @Test
     void getByCustomId_With_Bad_Id_Should_Return_Status_400() throws Exception{
-        String customId = "";
+        String customId = " ";  // NOTE: the space between the quotes is very important!
         
-        mockMvc.perform(get(BASE_URL)
-                .contentType(APP_JSON)
-                .param("custId", customId))
+        mockMvc.perform(get(BASE_URL+"/"+customId)
+                .contentType(APP_JSON))
+//                .param("custId", customId))
                 .andExpect(status().isBadRequest());
     }
 }
