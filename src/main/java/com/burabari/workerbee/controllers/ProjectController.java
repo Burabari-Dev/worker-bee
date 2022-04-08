@@ -7,6 +7,7 @@ package com.burabari.workerbee.controllers;
 import com.burabari.workerbee.models.Project;
 import com.burabari.workerbee.services.ProjectService;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -61,6 +62,15 @@ public class ProjectController {
         
         Optional<Project> opt = service.findByProjectId(projId);
         return ResponseEntity.of(opt);
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<Project>> getPage(
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") int size) {
+        
+        List<Project> projects = service.getPage(page, size);
+        return ResponseEntity.ok(projects);
     }
 
 }
