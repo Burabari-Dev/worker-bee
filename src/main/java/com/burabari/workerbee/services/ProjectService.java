@@ -64,4 +64,14 @@ public class ProjectService {
         Page<Project> page = repo.findAll(PageRequest.of(pageNo, pageSize));
         return page.toList();
     }
+    
+    public boolean update(Project project){
+        Optional<Project> opt = repo.findById(project.getId());
+        if(opt.isEmpty())
+            return false;
+        Project dbProject = opt.get();
+        dbProject.doUpdate(project);
+        repo.save(dbProject);
+        return true;
+    }
 }
