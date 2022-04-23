@@ -34,12 +34,13 @@ public class Staff extends User {
     }
 
     public Staff(String email, String password, String firstName,
-            String lastName, UserType type) {
+            String lastName, UserType type, String phone) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.type = type;
+        this.phone = phone;
     }
 
 }

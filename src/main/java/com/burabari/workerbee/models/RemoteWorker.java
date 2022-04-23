@@ -48,6 +48,8 @@ public class RemoteWorker extends User{
     @Column(name = "tech_stack")
     @ElementCollection                  //-> TODO: Consider changing this to embeddable
     private Set<String> techStack;
+    @Column(columnDefinition = "DATE")
+    protected LocalDate dob;
 
     public RemoteWorker(String email, UserType type, LocalDate dateRegistered){
         super(email, type);
@@ -55,11 +57,13 @@ public class RemoteWorker extends User{
     }
     
     public RemoteWorker(String email, String password, UserType type, 
-            LocalDate dateRegistered, Set<String> techStack) {
+            LocalDate dateRegistered, Set<String> techStack, String phone, LocalDate dob) {
         super(email, type);
         this.password = password;
         this.dateRegistered = dateRegistered;
         this.techStack = techStack;
+        this.phone = phone;
+        this.dob = dob;
     }
 
 }

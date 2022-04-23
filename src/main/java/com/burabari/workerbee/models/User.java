@@ -6,6 +6,7 @@ package com.burabari.workerbee.models;
 
 import com.burabari.workerbee.models.enums.UserState;
 import com.burabari.workerbee.models.enums.UserType;
+import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
