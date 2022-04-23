@@ -8,6 +8,7 @@ import com.burabari.workerbee.models.enums.UserType;
 import java.time.LocalDate;
 import java.util.Set;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -44,6 +45,9 @@ public class RemoteWorker extends User{
             joinColumns = @JoinColumn(name = "worker_id", referencedColumnName = "id"), 
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     protected Set<Role> roles;
+    @Column(name = "tech_stack")
+    @ElementCollection                  //-> TODO: Consider changing this to embeddable
+    private Set<String> techStack;
 
     public RemoteWorker(String email, UserType type, LocalDate dateRegistered){
         super(email, type);
@@ -51,10 +55,11 @@ public class RemoteWorker extends User{
     }
     
     public RemoteWorker(String email, String password, UserType type, 
-            LocalDate dateRegistered) {
+            LocalDate dateRegistered, Set<String> techStack) {
         super(email, type);
         this.password = password;
         this.dateRegistered = dateRegistered;
+        this.techStack = techStack;
     }
 
 }
