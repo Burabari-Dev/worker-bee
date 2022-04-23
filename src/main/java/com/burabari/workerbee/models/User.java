@@ -34,6 +34,7 @@ public class User {
     protected UserType type;
     @Column(name = "user_state")
     protected UserState userState;
+    protected String phone;
     
     public User(String email, UserType type){
         this.email = email;
